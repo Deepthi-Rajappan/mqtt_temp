@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.provider.SyncStateContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +21,7 @@ import java.io.UnsupportedEncodingException;
 public class MainActivity extends AppCompatActivity {
 
     private MqttAndroidClient client;
-    private String TAG = "MainActivity";
+    private String TAG = "PahoMqttClient";
     private PahoMqttClient pahoMqttClient;
 
     private EditText textMessage, subscribeTopic, unSubscribeTopic;
@@ -48,10 +49,13 @@ public class MainActivity extends AppCompatActivity {
                 String msg = textMessage.getText().toString().trim();
                 if (!msg.isEmpty()) {
                     try {
+                        Log.d(TAG, msg);
                         pahoMqttClient.publishMessage(client, msg, 1, Constants.PUBLISH_TOPIC);
                     } catch (MqttException e) {
+                        Log.d(TAG, msg);
                         e.printStackTrace();
                     } catch (UnsupportedEncodingException e) {
+                        Log.d(TAG, msg);
                         e.printStackTrace();
                     }
                 }
@@ -77,18 +81,11 @@ public class MainActivity extends AppCompatActivity {
         unSubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String topic = unSubscribeTopic.getText().toString().trim();
-                if (!topic.isEmpty()) {
-                    try {
-                        pahoMqttClient.unSubscribe(client, topic);
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    }
-                }
+                Intent intent = new Intent(MainActivity.this, MqttMessageService.class);
+                startService(intent);
             }
         });
 
-        Intent intent = new Intent(MainActivity.this, MqttMessageService.class);
-        startService(intent);
+
     }
 }

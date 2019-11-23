@@ -33,7 +33,7 @@ public class MqttMessageService extends Service {
         Log.d(TAG, "onCreate");
         pahoMqttClient = new PahoMqttClient();
         mqttAndroidClient = pahoMqttClient.getMqttClient(getApplicationContext(), Constants.MQTT_BROKER_URL, Constants.CLIENT_ID);
-
+        Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_SHORT).show();
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
@@ -76,7 +76,7 @@ public class MqttMessageService extends Service {
     }
 
     private void setMessageNotification(@NonNull String topic, @NonNull String msg) {
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), topic +": "+msg, Toast.LENGTH_SHORT).show();
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setContentTitle(topic)
